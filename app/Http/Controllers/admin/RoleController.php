@@ -10,10 +10,18 @@ use Illuminate\Support\Facades\Validator;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        // examples:
+        $this->middleware(['permission:view roles'])->only(['index']);
+        $this->middleware(['permission:create roles'])->only(['create', 'store']);
+        $this->middleware(['permission:edit roles'])->only(['edit', 'update']);
+        $this->middleware(['permission:delete roles'])->only(['destroy']);
+    }
     public function index()
     {
         if (request()->ajax()) {
-            return datatables()->of(Role::orderBy('name', 'ASC')->get())
+            return datatables()->of(Role::orderBy('name', 'ASC')->where('name', '!=', 'Admin')->get())
                 ->addColumn('action', function ($role) {
                     return view('admin.action', ['path' => 'admin.roles.edit', 'id' => $role->id]);
                 })

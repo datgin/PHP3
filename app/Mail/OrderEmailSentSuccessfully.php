@@ -17,9 +17,12 @@ class OrderEmailSentSuccessfully extends Mailable
      * Create a new message instance.
      */
 
-    public function __construct()
-    {
-
+    public function __construct(
+        public $order,
+        public $carts
+    ) {
+        $this->order = $order;
+        $this->carts = $carts;
     }
 
     /**

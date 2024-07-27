@@ -14,7 +14,7 @@ class ShopPageController extends Controller
 
         $category = null;
         // Lấy ra danh sách các danh mục con của các danh mục cha có parent_id = null
-        $categories = Category::whereHas('parent', function ($query) {
+        $categories = Category::query()->with('children')->whereHas('parent', function ($query) {
             $query->whereNull('parent_id');
         })->get();
 
@@ -26,11 +26,11 @@ class ShopPageController extends Controller
 
         if (!empty($slug)) {
             // Lấy ra danh mục đầu tiên có slug là $slug
-            $category = Category::where('slug', $slug)->first();
+            $category = Category::query()->where('slug', $slug)->first();
 
             // Nếu tồn tại danh mục thì lọc sản phẩm theo danh mục và các danh mục con của nó
             if ($category) {
-                $categoryIds = Category::descendantsOf($category->id)->pluck('id');
+                $categoryIds = Category::query()->descendantsOf($category->id)->pluck('id');
                 $products->whereIn('category_id', $categoryIds->toArray());
             }
         }
@@ -60,8 +60,17 @@ class ShopPageController extends Controller
                 return $query->orderByRaw('COALESCE(price_sale, price) ' . $orderDirection);
             });
 
+            // $products->when($request->min && $request->max, function ($query) use ($request) {
+            //     return $query->selectRaw('*, CASE WHEN price_sale IS NULL THEN price ELSE price_sale END AS price')->whereBetween('price', ["{$request->min}000", "{$request->max}000"]);
+            // });
+
             $products->when($request->min && $request->max, function ($query) use ($request) {
-                return $query->selectRaw('*, CASE WHEN price_sale IS NULL THEN price ELSE price_sale END AS price')->whereBetween('price', ["{$request->min}000", "{$request->max}000"]);
+                $min = (int) $request->min * 1000;
+                $max = (int) $request->max * 1000;
+                return $query->where(function ($query) use ($min, $max) {
+                    $query->whereBetween('price', [$min, $max])
+                        ->orWhereBetween('price_sale', [$min, $max]);
+                });
             });
 
             $products = $products->with('galleries')->paginate(9);

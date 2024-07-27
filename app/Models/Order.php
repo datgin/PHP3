@@ -15,6 +15,7 @@ class Order extends Model
         'email',
         'phone_number',
         'address',
+        'amount_shipping',
         'total_price',
         'status'
     ];

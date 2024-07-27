@@ -8,8 +8,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
+
 class BrandController extends Controller
 {
+    public function __construct()
+    {
+        // examples:
+        $this->middleware(['permission:view brands'])->only(['index']);
+        $this->middleware(['permission:create brands'])->only(['create', 'store']);
+        $this->middleware(['permission:edit brands'])->only(['edit', 'update']);
+        $this->middleware(['permission:delete brands'])->only(['destroy']);
+    }
     public function index()
     {
         if (request()->ajax()) {

@@ -72,17 +72,27 @@
 
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="mb-3">
                                     <label for="phone">Role</label>
-                                    <select name="role" id="role" class="form-control">
-                                        <option value="" disabled selected>Chọn vị trí</option>
-                                        @if ($roles->isNotEmpty())
-                                            @foreach ($roles as $role)
-                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                    @if ($roles->isNotEmpty())
+                                        <div class="row">
+                                            @foreach ($roles as $key => $role)
+                                                <div class="col-md-3">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="roles[]"
+                                                            id="flexCheckDefault{{ $key }}"
+                                                            value="{{ $role->name }}">
+                                                        <label class="form-check-label"
+                                                            for="flexCheckDefault{{ $key }}">
+                                                            {{ $role->name }}
+                                                        </label>
+                                                    </div>
+                                                </div>
                                             @endforeach
-                                        @endif
-                                    </select>
+                                        </div>
+                                        <p id="error"></p>
+                                    @endif
                                     <p id="error_name"></p>
                                 </div>
                             </div>

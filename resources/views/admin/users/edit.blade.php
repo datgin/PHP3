@@ -25,16 +25,16 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="name">Name</label>
-                                    <input type="text" value="{{ $user->name }}" name="name" id="name" class="form-control"
-                                        placeholder="Name">
+                                    <input type="text" value="{{ $user->name }}" name="name" id="name"
+                                        class="form-control" placeholder="Name">
                                     <p id="error_name"></p>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="email">Email</label>
-                                    <input type="text" value="{{ $user->email }}" name="email" id="email" class="form-control"
-                                        placeholder="Email">
+                                    <input type="text" value="{{ $user->email }}" name="email" id="email"
+                                        class="form-control" placeholder="Email">
                                     <p id="error_name"></p>
 
                                 </div>
@@ -43,26 +43,39 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="phone">Address</label>
-                                    <input type="text" value="{{ $user->address }}" name="address" id="address" class="form-control"
-                                        placeholder="Address">
+                                    <input type="text" value="{{ $user->address }}" name="address" id="address"
+                                        class="form-control" placeholder="Address">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="phone">Phone Number</label>
-                                    <input type="text" value="{{ $user->phone }}" name="phone" id="phone" class="form-control"
-                                        placeholder="Phone Number">
+                                    <input type="text" value="{{ $user->phone }}" name="phone" id="phone"
+                                        class="form-control" placeholder="Phone Number">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="mb-3">
                                     <label for="phone">Role</label>
-                                    <select name="role" id="role" class="form-control">
-                                        <option value="" disabled selected>Chọn vị trí</option>
-                                        <option value="1" {{ $user->role == 1 ? 'selected' : '' }}>Quản trị viên</option>
-                                        <option value="2" {{ $user->role == 2 ? 'selected' : '' }}>Nhân viên</option>
-                                        <option value="3" {{ $user->role == 3 ? 'selected' : '' }}>Khách hàng</option>
-                                    </select>
+                                    @if ($roles->isNotEmpty())
+                                        <div class="row">
+                                            @foreach ($roles as $key => $role)
+                                                <div class="col-md-3">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" @checked(in_array($role->name, $user->roles->pluck('name')->toArray()))
+                                                            type="checkbox" name="roles[]"
+                                                            id="flexCheckDefault{{ $key }}"
+                                                            value="{{ $role->name }}">
+                                                        <label class="form-check-label"
+                                                            for="flexCheckDefault{{ $key }}">
+                                                            {{ $role->name }}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <p id="error"></p>
+                                    @endif
                                     <p id="error_name"></p>
                                 </div>
                             </div>
@@ -93,7 +106,7 @@
                 cache: false,
                 success: function(response) {
                     if (response.status) {
-                      window.location.href = "{{ route('admin.users.index') }}";
+                        window.location.href = "{{ route('admin.users.index') }}";
                     } else {
                         $('input[type="text"], select, input[type="password"]').removeClass(
                             'is-invalid');

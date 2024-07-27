@@ -4,93 +4,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Success</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .email-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .email-header {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .email-body {
+            padding: 20px;
+        }
+
+        .email-footer {
+            background-color: #f1f1f1;
+            color: #777;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .order-details {
+            margin: 20px 0;
+        }
+
+        .order-details h2 {
+            margin: 0 0 10px;
+        }
+
+        .order-summary {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .order-summary th,
+        .order-summary td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .order-summary th {
+            background-color: #f7f7f7;
+        }
+
+        .order-summary td {
+            background-color: #ffffff;
+        }
+
+        .order-summary .total {
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
-<style>
-    body {
-        font-family: 'Arial', sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        background-color: #f4f4f4;
-    }
-
-    .order-success-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-
-    .order-success-card {
-        background: white;
-        padding: 40px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        max-width: 400px;
-        width: 100%;
-    }
-
-    .icon-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #4CAF50;
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        margin: 0 auto 20px;
-    }
-
-    .icon {
-        fill: white;
-        width: 40px;
-        height: 40px;
-    }
-
-    h1 {
-        font-size: 24px;
-        color: #333;
-        margin-bottom: 10px;
-    }
-
-    p {
-        font-size: 16px;
-        color: #666;
-        margin-bottom: 20px;
-    }
-
-    .btn {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #4CAF50;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        transition: background-color 0.3s;
-    }
-
-    .btn:hover {
-        background-color: #45A049;
-    }
-</style>
 
 <body>
-    <div class="order-success-container">
-        <div class="order-success-card">
-            <div class="icon-container">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon">
-                    <path
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.59l-3.59-3.59L8 12l3 3 7-7 1.41 1.42L11 16.59z" />
-                </svg>
+    <div class="email-container">
+        <div class="email-header">
+            <h1>Order Confirmation</h1>
+        </div>
+        <div class="email-body">
+            <p>Dear [{{ $order->name }}],</p>
+            <p>Thank you for your order! Your order has been successfully placed. Below are the details:</p>
+
+            <div class="order-details">
+                <h2>Order Details</h2>
+                <p><strong>Order Number:</strong> [{{ $order->id }}]</p>
+                <p><strong>Order Date:</strong> [{{ date_format(date_create($order->created_at), 'd/m/Y H:i:s') }}]</p>
+                <p><strong>Status:</strong> [{{ $order->status }}]</p>
+                <p><strong>Payment Method:</strong> [Payment Method]</p>
             </div>
-            <h1>Đặt hàng thành công!</h1>
-            <p>Cảm ơn bạn đã mua sắm tại cửa hàng của chúng tôi. Đơn hàng của bạn đã được xử lý thành công.</p>
-            <a href="{{ route('home') }}" class="btn">Tiếp tục mua sắm</a>
+
+            <table class="order-summary">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($carts as $cart)
+                        <tr>
+                            <td>{{ $cart->name }}</td>
+                            <td>{{ $cart->qty }}</td>
+                            <td>{{ number_format($cart->price, 0, ',', '.') }} ₫</td>
+                            <td>{{ number_format($cart->subtotal + $cart->tax, 0, ',', '.') }} ₫</td>
+                        </tr>
+                    @endforeach
+
+
+                    <tr>
+                        <td class="total" colspan="3">Subtotal</td>
+                        <td class="total">{{ number_format($order->total_price, 0, ',', '.') }} ₫</td>
+                    </tr>
+                    <tr>
+                        <td class="total" colspan="3">Shipping</td>
+                        <td class="total">{{ number_format($order->amount_shipping, 0, ',', '.') }} ₫</td>
+                    </tr>
+                    <tr>
+                        <td class="total" colspan="3">Total</td>
+                        <td class="total">{{ number_format($order->total_price, 0, ',', '.') }} ₫</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>If you have any questions, feel free to <a href="mailto:support@example.com">contact us</a>.</p>
+            <a href="#" class="btn" style="color: #ffffff">View Your Order</a>
+        </div>
+        <div class="email-footer">
+            <p>&copy; 2024 Your Company. All rights reserved.</p>
+            <p>123 Your Street, Your City, Your Country</p>
         </div>
     </div>
 </body>

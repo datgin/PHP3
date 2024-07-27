@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\HomePageController;
 
+use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\ShopPageController;
 use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\RoleController;
@@ -14,8 +14,11 @@ use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\admin\CategoryController;
+use App\Http\Controllers\admin\DiscountController;
+use App\Http\Controllers\admin\ShippingController;
 use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\PermissionController;
+use App\Http\Controllers\admin\DiscountController as AdminDiscountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,6 +105,24 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('roles/{id}/edit', [RoleController::class, 'edit'])->name('admin.roles.edit');
         Route::put('roles/{id}', [RoleController::class, 'update'])->name('admin.roles.update');
         Route::delete('roles/{id}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
+
+        // shipping routes
+        Route::get('shipping/create', [ShippingController::class, 'create'])->name('admin.shipping.create');
+        Route::post('shipping', [ShippingController::class, 'store'])->name('admin.shipping.store');
+        Route::get('shipping/{id}/edit', [ShippingController::class, 'edit'])->name('admin.shipping.edit');
+        Route::put('shipping/{id}', [ShippingController::class, 'update'])->name('admin.shipping.update');
+        Route::delete('shipping/{id}', [ShippingController::class, 'destroy'])->name('admin.shipping.destroy');
+
+        // discount coupons routes
+        Route::get('coupons', [DiscountController::class, 'index'])->name('admin.coupons.index');
+        Route::get('coupons/create', [DiscountController::class, 'create'])->name('admin.coupons.create');
+        Route::post('coupons', [DiscountController::class, 'store'])->name('admin.coupons.store');
+        Route::get('coupons/{id}/edit', [DiscountController::class, 'edit'])->name('admin.coupons.edit');
+        Route::put('coupons/{id}', [DiscountController::class, 'update'])->name('admin.coupons.update');
+        Route::delete('coupons/{id}', [DiscountController::class, 'destroy'])->name('admin.coupons.destroy');
+
+        // orders routes
+
     });
 });
 
@@ -140,6 +161,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('profile', [AccountController::class, 'profile'])->name('profile');
 
     Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
+
+    Route::get('get-amount-address/{id}', [CheckoutController::class, 'getAmount'])->name('get-amount');
 
     Route::post('pocess-checkout', [CheckoutController::class, 'pocessCheckout'])->name('pocess-checkout');
 

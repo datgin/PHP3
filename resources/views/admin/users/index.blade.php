@@ -32,7 +32,6 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Role</th>
-                                <th width="100">Remember</th>
                                 <th width="100">Created</th>
                                 <th width="100">Action</th>
                             </tr>
@@ -69,10 +68,6 @@
                 {
                     data: 'role',
                     name: 'role'
-                },
-                {
-                    data: 'remember_token',
-                    name: 'remember_token'
                 },
                 {
                     data: 'created_at',

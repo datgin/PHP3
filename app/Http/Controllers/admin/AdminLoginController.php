@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -28,7 +29,7 @@ class AdminLoginController extends Controller
 
                 $user = auth()->guard('admin')->user();
 
-                if ($user->hasRole('admin')) {
+                if ($user->roles->isNotEmpty()) {
                     return redirect()->route('admin.dashboard')->with('success', 'Chào mừng quay trở lại.');
                 } else {
                     Auth::guard('admin')->logout();

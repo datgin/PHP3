@@ -10,6 +10,14 @@ use Illuminate\Support\Facades\Validator;
 class PermissionController extends Controller
 {
     //
+    public function __construct()
+    {
+        // examples:
+        $this->middleware(['permission:view permissions'])->only(['index']);
+        $this->middleware(['permission:create permissions'])->only(['create', 'store']);
+        $this->middleware(['permission:edit permissions'])->only(['edit', 'update']);
+        $this->middleware(['permission:delete permissions'])->only(['destroy']);
+    }
 
     public function index()
     {

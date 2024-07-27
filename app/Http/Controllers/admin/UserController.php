@@ -16,6 +16,15 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        // examples:
+        $this->middleware(['permission:view users'])->only(['index']);
+        $this->middleware(['permission:create users'])->only(['create', 'store']);
+        $this->middleware(['permission:edit users'])->only(['edit', 'update']);
+        $this->middleware(['permission:delete users'])->only(['destroy']);
+    }
+
     public function index()
     {
         if (request()->ajax()) {
@@ -23,22 +32,11 @@ class UserController extends Controller
                 ->addColumn('action', function ($user) {
                     return view('admin.action', ['path' => 'admin.users.edit', 'id' => $user->id]);
                 })
-                ->addColumn('remember_token', function ($user) {
-                    return $user->remember_token ? '<span class="badge badge-success">Yes</span>' : '<span class="badge badge-danger">No</span>';
-                })
                 ->addColumn('created_at', function ($user) {
                     return $user->created_at->diffForHumans();
                 })
                 ->addColumn('role', function ($user) {
-                    $roleIDS = $user->roles->pluck('id')->toArray();
-
-                    if(in_array(1, $roleIDS)){
-                        return '<span class="badge badge-primary">Admin</span>';
-                    }else if(in_array(2, $roleIDS)){
-                        return '<span class="badge badge-warning">Moderator</span>';
-                    }else if(in_array(3, $roleIDS)){
-                        return '<span class="badge badge-info">User</span>';
-                    }
+                    return  $user->roles->pluck('name')->implode(' | ');
                 })
                 ->rawColumns(['action', 'remember_token', 'role'])
                 ->addIndexColumn()
@@ -68,7 +66,6 @@ class UserController extends Controller
                 'email' => 'required|unique:users',
                 'password' => 'required',
                 'comfirm_password' => 'required|same:password',
-                'role' => 'required|in:1,2,3',
             ]);
 
             if ($validator->passes()) {
@@ -85,7 +82,7 @@ class UserController extends Controller
                         'email_verified_at' => now()->format('Y-m-d H:i:s'),
                     ]);
 
-                    $user->assignRole($request->role);
+                    $user->syncRoles($request->roles);
 
                     DB::commit();
                 } catch (\Throwable $th) {
@@ -112,7 +109,9 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        return view('admin.users.edit', ['user' => User::findOrFail($id)]);
+        $roles = Role::get();
+
+        return view('admin.users.edit', ['user' => User::findOrFail($id), 'roles' => $roles]);
     }
 
     /**
@@ -124,7 +123,7 @@ class UserController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
                 'email' => 'required|unique:users,email,' . $id,
-                'role' => 'required|in:1,2,3',
+                'roles' => 'required',
             ]);
 
             if ($validator->passes()) {
@@ -139,7 +138,7 @@ class UserController extends Controller
                     ]);
 
                     $user = User::findOrFail($id);
-                    $user->assignRole($request->role);
+                    $user->syncRoles($request->roles);
 
                     // $user->save();
 

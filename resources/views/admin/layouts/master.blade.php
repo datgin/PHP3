@@ -20,7 +20,7 @@
 
     <link rel="stylesheet" href="{{ asset('admin-assets/plugins/dropzone/min/dropzone.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin-assets/plugins/summernote/summernote-bs4.min.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('admin-assets/css/datetimepicker.css') }}">
 
     <!-- Custom CSS -->
     @yield('css')
@@ -56,6 +56,8 @@
 
     <script src="{{ asset('admin-assets/plugins/dropzone/min/dropzone.min.js') }}"></script>
     <script src="{{ asset('admin-assets/plugins/summernote/summernote-bs4.min.js') }}"></script>
+
+    <script src="{{ asset('admin-assets/js/datetimepicker.js') }}"></script>
 
     <!-- Token -->
     <script type="text/javascript">

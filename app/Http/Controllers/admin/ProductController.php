@@ -15,6 +15,14 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        // examples:
+        $this->middleware(['permission:view products'])->only(['index']);
+        $this->middleware(['permission:create products'])->only(['create', 'store']);
+        $this->middleware(['permission:edit products'])->only(['edit', 'update']);
+        $this->middleware(['permission:delete products'])->only(['destroy']);
+    }
     public function index()
     {
         if (request()->ajax()) {
@@ -242,6 +250,17 @@ class ProductController extends Controller
     public function destroy(Request $request)
     {
         $product = Product::findOrFail($request->id);
+
+
+        if ($product->galleries->count() > 0) {
+
+            foreach ($product->galleries as $gallery) {
+                if (File::exists(public_path('/images/products/' . $gallery->image))) {
+                    File::delete(public_path('/images/products/' . $gallery->image));
+                }
+            }
+        }
+
         $product->delete();
 
         return response()->json(['status' => true, 'message' => 'Product deleted successfully.']);

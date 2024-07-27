@@ -50,7 +50,14 @@
 
                                     <div class="col-md-12">
                                         <div class="mb-3">
-                                            <input type="text" name="address" value="{{ old('address') }}"" id="address" placeholder="Address" class="form-control">
+                                            <select name="address" id="address" class="form-control">
+                                                <option value="" disabled selected>Địa chỉ</option>
+                                                @if ($cities->isNotEmpty())
+                                                    @foreach ($cities as $city)
+                                                        <option value="{{ $city->id }}">{{ $city->name }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
                                             @error('address')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
@@ -87,11 +94,14 @@
                         </div>
                         <div class="card cart-summery">
                             <div class="card-body">
+                                @php($subtotal = 0)
                                 @foreach (Cart::content() as $item)
+                                    @php($subtotal += $item->subtotal + $item->tax)
                                     <div class="d-flex justify-content-between pb-2">
-                                        <div class="h6 dots w-75"><small>x{{ $item->qty }} | </small>{{ $item->name }}
+                                        <div class="h6 dots w-75"><small>x{{ $item->qty }} |
+                                            </small>{{ $item->name }}
                                         </div>
-                                        <div class="h6">{{ $item->total(0, ',', '.') }} ₫</div>
+                                        <div class="h6">{{ number_format($item->price, 0, ',', '.') }} ₫</div>
                                     </div>
                                 @endforeach
 
@@ -101,11 +111,15 @@
                                 </div>
                                 <div class="d-flex justify-content-between mt-2">
                                     <div class="h6"><strong>Shipping</strong></div>
-                                    <div class="h6"><strong>free shipping</strong></div>
+                                    <div class="h6" id="amount-shipping"><strong>0 ₫</strong></div>
+                                    <input type="hidden" name="amount_shipping" id="amount-shipping-input" value="0">
                                 </div>
                                 <div class="d-flex justify-content-between mt-2 summery-end">
                                     <div class="h5"><strong>Total</strong></div>
-                                    <div class="h5"><strong>{{ Cart::total(0, ',', '.') }} ₫</strong></div>
+                                    <div class="h5"><strong id="total">{{ number_format($subtotal, 0, ',', '.') }}
+                                            ₫</strong>
+                                        <input type="hidden" name="total" value="0" id="total-input">
+                                    </div>
                                 </div>
                                 <div class="pt-4">
                                     <button type="submit" class="btn-dark btn btn-block w-100">Pay Now</button>
@@ -123,4 +137,33 @@
 
         </div>
     </section>
+@endsection
+
+@section('scripts')
+    <script>
+        $("#address").change(function() {
+            let city_id = $(this).val()
+            $.ajax({
+                type: "GET",
+                url: "{{ route('get-amount', ':id') }}".replace(':id', city_id),
+                data: {
+                    city_id
+                },
+                success: function(response) {
+                    $("#amount-shipping").html(response.toLocaleString('vi-VN') + " ₫")
+
+                    $("#amount-shipping-input").val(response)
+
+                    let total = "{{ Cart::total(0, ',', '.') }}";
+
+                    total = parseInt(total.replace(/\./g, '').replace(' ₫', ''), 10)
+
+                    $("#total").html((total + response).toLocaleString('vi-VN') + " ₫")
+
+                    $("#total-input").val((total + response))
+
+                }
+            })
+        });
+    </script>
 @endsection

@@ -24,7 +24,7 @@
                             <tbody>
                                 @php($subtotal = 0)
                                 @forelse ($carts as $cart)
-                                    @php($subtotal += $cart->price * $cart->qty)
+                                    @php($subtotal += $cart->subtotal + $cart->tax)
                                     <tr>
                                         <td>
                                             <div class="">
@@ -58,7 +58,7 @@
                                             </div>
                                         </td>
                                         <td id="subtotal-{{ $cart->rowId }}">
-                                            {{ $cart->total(0, ',', '.') }} ₫
+                                            {{ number_format($cart->subtotal + $cart->tax, 0, ',', '.') }} ₫
                                         </td>
                                         <td>
                                             <button onclick="removeCart('{{ $cart->rowId }}')"
@@ -81,17 +81,9 @@
                             <h2 class="bg-white">Tóm tắt giỏ hàng</h3>
                         </div>
                         <div class="card-body">
-                            <div class="d-flex justify-content-between pb-2">
-                                <div>Subtotal</div>
-                                <div id="subtotal_total">{{ Cart::total(0, ',', '.') }} ₫</div>
-                            </div>
-                            <div class="d-flex justify-content-between pb-2">
-                                <div>Shipping</div>
-                                <small>Free shipping</small>
-                            </div>
                             <div class="d-flex justify-content-between summery-end">
                                 <div>Total</div>
-                                <div id="total">{{ Cart::total(0, ',', '.') }} ₫</div>
+                                <div id="total">{{ number_format($subtotal, 0, ',', '.') }} ₫</div>
                             </div>
                             <div class="pt-5">
                                 <a href="{{ $carts->isEmpty() ? 'javascript:void(0)' : route('checkout') }}"
@@ -245,7 +237,7 @@
                         }
                     });
 
-                    $('#total, #subtotal_total').html(_total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') +
+                    $('#total').html(_total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') +
                         ' ₫');
                 },
                 error(xhr, status, error) {

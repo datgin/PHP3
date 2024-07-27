@@ -84,8 +84,8 @@
                                 </button>
                             </div>
                         </div>
-                        <a href="javascript:void(0)" onclick="addToCart({{ $product->id }})" class="btn btn-dark"><i
-                                class="fas fa-shopping-cart"></i> &nbsp;ADD TO CART</a>
+                        <button @disabled($product->qty == 0) onclick="addToCart({{ $product->id }})" class="btn btn-dark"><i
+                                class="fas fa-shopping-cart"></i> &nbsp;ADD TO CART</button>
                     </div>
                 </div>
 
