@@ -15,33 +15,7 @@
     <section class=" section-11 ">
         <div class="container  mt-5">
             <div class="row">
-                <div class="col-md-3">
-                    <ul id="account-panel" class="nav nav-pills flex-column">
-                        <li class="nav-item">
-                            <a href="account.php" class="nav-link font-weight-bold" role="tab" aria-controls="tab-login"
-                                aria-expanded="false"><i class="fas fa-user-alt"></i> My Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="my-orders.php" class="nav-link font-weight-bold" role="tab"
-                                aria-controls="tab-register" aria-expanded="false"><i class="fas fa-shopping-bag"></i>My
-                                Orders</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="wishlist.php" class="nav-link font-weight-bold" role="tab"
-                                aria-controls="tab-register" aria-expanded="false"><i class="fas fa-heart"></i> Wishlist</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="change-password.php" class="nav-link font-weight-bold" role="tab"
-                                aria-controls="tab-register" aria-expanded="false"><i class="fas fa-lock"></i> Change
-                                Password</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('logout') }}" class="nav-link font-weight-bold" role="tab"
-                                aria-controls="tab-register" aria-expanded="false"><i class="fas fa-sign-out-alt"></i>
-                                Logout</a>
-                        </li>
-                    </ul>
-                </div>
+                @include('client.components.sidebar')
                 <div class="col-md-9">
                     <div class="card">
                         <div class="card-header">
@@ -52,23 +26,23 @@
                                 <div class="mb-3">
                                     <label for="name">Name</label>
                                     <input type="text" name="name" id="name" placeholder="Enter Your Name"
-                                        class="form-control">
+                                        class="form-control" value="{{ Auth::user()->name }}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="email">Email</label>
                                     <input type="text" name="email" id="email" placeholder="Enter Your Email"
-                                        class="form-control">
+                                        class="form-control" value="{{ Auth::user()->email }}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="phone">Phone</label>
                                     <input type="text" name="phone" id="phone" placeholder="Enter Your Phone"
-                                        class="form-control">
+                                        class="form-control" value="{{ Auth::user()->phone }}">
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="phone">Address</label>
                                     <textarea name="address" id="address" class="form-control" cols="30" rows="5"
-                                        placeholder="Enter Your Address"></textarea>
+                                        placeholder="Enter Your Address">{{ Auth::user()->address }}</textarea>
                                 </div>
 
                                 <div class="d-flex">

@@ -43,7 +43,9 @@
                     if (response.status) {
                         window.location.href = response.url;
                     } else {
-                        $('.alert').addClass('alert-danger').html(response.message);
+                        if (response.message) {
+                            $('.alert').addClass('alert-danger').html(response.message);
+                        }
                         $('input[type="text"], input[type="password"]').removeClass('is-invalid');
                         $('#error').removeClass('invalid-feedback').html('');
                         $.each(response.errors, function(index, element) {

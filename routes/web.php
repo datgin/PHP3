@@ -11,6 +11,8 @@ use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\RoleController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\BrandController;
+use App\Http\Controllers\admin\OrderController;
+use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\admin\CategoryController;
@@ -51,6 +53,7 @@ Route::group(['prefix' => 'admin'], function () {
     });
 
     Route::group(['middleware' => 'admin.auth'], function () {
+
         // dashboard routes
         Route::get('dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
 
@@ -122,7 +125,19 @@ Route::group(['prefix' => 'admin'], function () {
         Route::delete('coupons/{id}', [DiscountController::class, 'destroy'])->name('admin.coupons.destroy');
 
         // orders routes
+        Route::get('orders', [OrderController::class, 'index'])->name('admin.orders.index');
+        Route::get('orders/{id}/details', [OrderController::class, 'show'])->name('admin.orders.show');
+        Route::put('orders/{order}', [OrderController::class, 'update'])->name('admin.orders.update');
+        Route::get('/orders/export-all', [OrderController::class, 'exportAllInvoices'])->name('orders.export.all');
+        Route::get('/orders/{id}/export', [OrderController::class, 'exportInvoice'])->name('orders.export');
 
+        // banners routes
+        Route::get('banners', [BannerController::class, 'index'])->name('admin.banners.index');
+        Route::get('banners/create', [BannerController::class, 'create'])->name('admin.banners.create');
+        Route::post('banners', [BannerController::class, 'store'])->name('admin.banners.store');
+        Route::get('banners/{banner}/edit', [BannerController::class, 'edit'])->name('admin.banners.edit');
+        Route::put('banners/{banner}', [BannerController::class, 'update'])->name('admin.banners.update');
+        Route::delete('banners/{banner}', [BannerController::class, 'destroy'])->name('admin.banners.destroy');
     });
 });
 
@@ -160,11 +175,23 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('profile', [AccountController::class, 'profile'])->name('profile');
 
+    Route::get('my-orders', [AccountController::class, 'orders'])->name('my-orders');
+
+    Route::get('order-cancel/{id}', [AccountController::class, 'orderCancel'])->name('order-cancel');
+
+    Route::get('order-detail/{id}', [AccountController::class, 'orderDetail'])->name('order-detail');
+
     Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
 
-    Route::get('get-amount-address/{id}', [CheckoutController::class, 'getAmount'])->name('get-amount');
+    Route::post('get-amount-address', [CheckoutController::class, 'getAmount'])->name('get-amount');
+
+    Route::post('apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('apply-coupon');
+
+    Route::post('remove-coupon', [CheckoutController::class, 'removeCoupon'])->name('remove-coupon');
 
     Route::post('pocess-checkout', [CheckoutController::class, 'pocessCheckout'])->name('pocess-checkout');
+
+    Route::get('/vnpay-callback', [CheckoutController::class, 'vnpayCallback'])->name('vnpay.callback');
 
     Route::get('thank-you', [CheckoutController::class, 'thankYou'])->name('thank-you');
 });

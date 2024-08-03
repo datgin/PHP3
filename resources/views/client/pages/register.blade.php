@@ -14,6 +14,7 @@
                     </div>
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Email" id="email" name="email">
+                        <p id="error"></p>
                     </div>
                     <div class="form-group position-relative">
                         <input type="password" class="form-control" placeholder="Password" id="password" name="password">
@@ -78,12 +79,7 @@
                 cache: false,
                 success: function(response) {
                     if (response.status) {
-                        Swal.fire({
-                            title: "Good job!",
-                            text: response.message,
-                            icon: "success"
-                        })
-                        element[0].reset();
+                            window.location.href = response.url;
                     } else {
                         $('input[type="text"], input[type="password"]').removeClass('is-invalid');
                         $('#error').removeClass('invalid-feedback').html('');

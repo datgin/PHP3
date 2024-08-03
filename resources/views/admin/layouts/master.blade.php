@@ -58,7 +58,6 @@
     <script src="{{ asset('admin-assets/plugins/summernote/summernote-bs4.min.js') }}"></script>
 
     <script src="{{ asset('admin-assets/js/datetimepicker.js') }}"></script>
-
     <!-- Token -->
     <script type="text/javascript">
         $.ajaxSetup({

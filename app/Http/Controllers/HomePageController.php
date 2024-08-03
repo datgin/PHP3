@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Events\OrderShipped;
+use App\Models\Banner;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -44,7 +45,9 @@ class HomePageController extends Controller
         // $user = User::find(Auth::user()->id)->notifications()->get();
         // dd($user);
 
+        $sliders = Banner::where('status', '1')->get();
 
-        return view('client.pages.home', compact('isProductFeatured', 'latest', 'productPriceSale'));
+
+        return view('client.pages.home', compact('isProductFeatured', 'latest', 'productPriceSale', 'sliders'));
     }
 }

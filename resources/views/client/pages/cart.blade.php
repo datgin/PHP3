@@ -24,7 +24,7 @@
                             <tbody>
                                 @php($subtotal = 0)
                                 @forelse ($carts as $cart)
-                                    @php($subtotal += $cart->subtotal + $cart->tax)
+                                    @php($subtotal += $cart->price * $cart->qty  + $cart->tax)
                                     <tr>
                                         <td>
                                             <div class="">
@@ -90,10 +90,6 @@
                                     class="btn-dark btn btn-block w-100">Tiến hành thanh toán</a>
                             </div>
                         </div>
-                    </div>
-                    <div class="input-group apply-coupan mt-4">
-                        <input type="text" placeholder="Coupon Code" class="form-control">
-                        <button class="btn btn-dark" type="button" id="button-addon2">Áp dụng</button>
                     </div>
                 </div>
             </div>
@@ -189,7 +185,7 @@
 
         });
 
-        $('.minus').click(function() {
+        $('body').on('click', '.minus', function() {
             var rowId = $(this).data('rowid');
             var qtyElements = $(this).parent().next();
             var qtyValue = parseInt(qtyElements.val());
@@ -200,7 +196,7 @@
             }
         })
 
-        $('.plus').click(function() {
+        $('body').on('click', '.plus', function() {
             var rowId = $(this).data('rowid');
             var qtyElements = $(this).parent().prev();
             var qtyValue = parseInt(qtyElements.val());
@@ -221,7 +217,6 @@
                 },
                 dataType: 'json',
                 success: function(data) {
-                    console.log(data);
                     var _subtotal = 0;
                     var _total = 0
                     var cartArray = Object.values(data.carts);

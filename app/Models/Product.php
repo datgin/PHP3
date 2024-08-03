@@ -42,6 +42,12 @@ class Product extends Model
         return $this->hasMany(ProductGallery::class, 'product_id');
     }
 
+    public function details()
+    {
+        return $this->belongsToMany(Order::class, 'order_items', 'product_id', 'order_id',)
+            ->withPivot(['name', 'price', 'tax', 'quantity']);
+    }
+
     protected $cat = [
         'status' => 'boolean',
     ];

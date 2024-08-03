@@ -16,8 +16,11 @@ class Order extends Model
         'phone_number',
         'address',
         'amount_shipping',
+        'amount_coupon',
         'total_price',
-        'status'
+        'status',
+        'note',
+        'payment_status'
     ];
 
     public function user()
@@ -25,8 +28,10 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function items()
+
+    public function details()
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->belongsToMany(Product::class, 'order_items', 'order_id', 'product_id')
+            ->withPivot(['name', 'price', 'tax', 'quantity']);
     }
 }

@@ -121,7 +121,7 @@ with font-awesome or any other icon font library -->
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="orders.html" class="nav-link">
+                    <a href="{{ route('admin.orders.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-shopping-bag"></i>
                         <p>Orders</p>
                     </a>
@@ -180,6 +180,27 @@ with font-awesome or any other icon font library -->
                             <a href="{{ route('admin.users.create') }}" class="nav-link">
                                 <i class="nav-icon fas fa-plus"></i>
                                 <p>Add User</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:void(0)" class="nav-link" data-toggle="collapse">
+                        <i class="nav-icon fas fa-images"></i>
+                        <p>Banner</p>
+                        <i class="right fas fa-angle-right"></i>
+                    </a>
+                    <ul class="nav nav-treeview ml-3">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.banners.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-list"></i>
+                                <p>list Banner</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.banners.create') }}" class="nav-link">
+                                <i class="nav-icon fas fa-plus"></i>
+                                <p>Add Banner</p>
                             </a>
                         </li>
                     </ul>

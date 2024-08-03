@@ -269,7 +269,7 @@
                     reader.onload = function(e) {
                         const imgElement = $('<img>').attr('src', e.target.result).addClass(
                             'w-100 preview-image img-thumbnail');
-                        const deleteBtn = $('<button>').addClass('delete-btn btn btn-sm btn-danger')
+                        const deleteBtn = $('<button>').addClass('delete-btn btn btn-sm btn-danger position-absolute top-0 end-0')
                             .text('X');
                         const galleryImage = $('<div>').addClass('col-4 gallery-image').append(
                             imgElement, deleteBtn);

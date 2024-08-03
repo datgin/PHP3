@@ -51,7 +51,7 @@
             <div class="right-nav py-0">
                 <a href="{{ route('cartShow') }}" class="ml-3 d-flex pt-2 btn-cart">
                     <i class="fas fa-shopping-cart text-primary"></i>
-                    <span class="rounded-circle">{{ Cart::count() ?? 0 }}</span>
+                    <span class="rounded-circle">{{ Cart::content()->count() ?? 0 }}</span>
                 </a>
             </div>
         </nav>

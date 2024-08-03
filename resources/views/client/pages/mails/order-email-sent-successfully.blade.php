@@ -134,6 +134,10 @@
                         <td class="total" colspan="3">Subtotal</td>
                         <td class="total">{{ number_format($order->total_price, 0, ',', '.') }} ₫</td>
                     </tr>
+                        <tr>
+                            <td class="total" colspan="3">Discount</td>
+                            <td class="total">{{ number_format($order->amount_coupon, 0, ',', '.') }} ₫</td>
+                        </tr>
                     <tr>
                         <td class="total" colspan="3">Shipping</td>
                         <td class="total">{{ number_format($order->amount_shipping, 0, ',', '.') }} ₫</td>
